@@ -104,10 +104,10 @@ parse_host_port(Scheme, HostPort) ->
     {Host, int_port(Port)}.
 
 split_uri(UriPart, SplitChar, NoMatchResult, SkipLeft, SkipRight) ->
-    case inets_regexp:first_match(UriPart, SplitChar) of
-	{match, Match, _} ->
-	    {string:substr(UriPart, 1, Match - SkipLeft),
-	     string:substr(UriPart, Match + SkipRight, length(UriPart))};
+    case re:run(UriPart, SplitChar) of
+	{match, [{Match, _} | _]} ->
+	    {string:substr(UriPart, 1, Match - SkipLeft + 1),
+	     string:substr(UriPart, Match + SkipRight + 1, length(UriPart))};
 	nomatch ->
 	    NoMatchResult
     end.
@@ -249,21 +249,3 @@ parse_rtmp_1_test() ->
 
 parse_rtsp_1_test() ->
   ?assertEqual({rtsp,[],"ya.ru",554,"/test/access",[]},  http_uri2:parse("rtsp://ya.ru/test/access")).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
