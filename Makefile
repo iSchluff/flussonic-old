@@ -29,7 +29,7 @@ app: deps/cowboy deps/lager/ebin/lager_transform.beam
 deps/cowboy:
 	./rebar get-deps compile
 
-deps/lager/ebin/lager_transform.beam:
+deps/lager/ebin/lager_transform.beam: | deps/cowboy
 	./rebar compile
 
 clean:
