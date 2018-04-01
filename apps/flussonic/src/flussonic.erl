@@ -83,7 +83,6 @@ start0(_Options) ->
     invalid_config -> timer:sleep(2000), throw({stop,2})
   end,
 
-  catch erlang:system_flag(scheduler_bind_type, spread),
   application:start(compiler),
   application:load(lager),
 
