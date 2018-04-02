@@ -640,7 +640,7 @@ handle_request(<<"DESCRIBE">>, URL1, Headers, Body, #rtsp{callback = Callback} =
       SDP = sdp:encode(MediaInfo),
 
 
-      {A1, A2, A3} = now(),
+      {A1, A2, A3} = erlang:timestamp(),
       Session = integer_to_list((A1*1000000+A2)*1000000+A3),
 
       AScale = case lists:keyfind(audio, #stream_info.content, Streams) of

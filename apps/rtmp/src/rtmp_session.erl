@@ -401,7 +401,7 @@ call_function(#rtmp_session{} = State, #rtmp_funcall{command = connect, args = [
     _ -> 0
   end,
 
-  SessionId = timer:now_diff(erlang:now(),{0,0,0}),
+  SessionId = timer:now_diff(erlang:timestamp(),{0,0,0}),
 
 	NewState1 =	State#rtmp_session{player_info = PlayerInfo, path = Path, amf_ver = AMFVersion, session_id = SessionId},
 	

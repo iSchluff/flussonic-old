@@ -745,9 +745,9 @@ dref(<<0:32, _Count:32, Atom/binary>> = _Dref, Mp4Track) ->
 
 % Sample table box
 stbl(Atom, Mp4Track) ->
-  _T1 = erlang:now(),
+  _T1 = erlang:timestamp(),
   R = parse_atom(Atom, Mp4Track),
-  _T2 = erlang:now(),
+  _T2 = erlang:timestamp(),
   % ?D({stbl, timer:now_diff(T2,T1)}),
   R.
 

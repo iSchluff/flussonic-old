@@ -108,7 +108,7 @@ terminate(_,_) -> ok.
 
 
 init_dts([#video_frame{dts = DTS}|_], #reader{first_dts = undefined} = Reader) ->
-  Reader#reader{first_dts = DTS, started_at = erlang:now()};
+  Reader#reader{first_dts = DTS, started_at = erlang:timestamp()};
 
 init_dts(_, Reader) ->
   Reader.
@@ -117,7 +117,7 @@ init_dts(_, Reader) ->
 calculate_delay(Frames, #reader{first_dts = FirstDTS, started_at = StartedAt}) when length(Frames) > 0 ->
   #video_frame{dts = DTS} = hd(lists:reverse(Frames)),
   DtsDelta = DTS - FirstDTS,
-  RealDelta = timer:now_diff(erlang:now(), StartedAt) div 1000,
+  RealDelta = timer:now_diff(erlang:timestamp(), StartedAt) div 1000,
   Delta = DtsDelta - RealDelta - 300,
   if
     Delta < 0 -> 0;

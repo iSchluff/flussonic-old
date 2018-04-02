@@ -312,9 +312,9 @@ parse_atom(<<>>, State) ->
   State;
 
 parse_atom(Bin, State) ->
-  _T1 = erlang:now(),
+  _T1 = erlang:timestamp(),
   {ok, _Atom, NewState, Rest} = decode_atom(Bin, State),
-  _T2 = erlang:now(),
+  _T2 = erlang:timestamp(),
   % ?D({_Atom, timer:now_diff(_T2, _T1)}),
   parse_atom(Rest, NewState).
 
@@ -331,13 +331,13 @@ decode_atom(<<AllAtomLength:32, BinaryAtomName:4/binary, AtomRest/binary>>, Mp4P
    _ValidValue ->
      binary_to_atom(BinaryAtomName,latin1)
   end,
-  % T1 = erlang:now(),
+  % T1 = erlang:timestamp(),
   NewMp4Parser = case erlang:function_exported(?MODULE, AtomName, 2) of
     true -> ?MODULE:AtomName(Atom, Mp4Parser);
     false -> Mp4Parser
     % false -> Mp4Parser
   end,
-  % case timer:now_diff(erlang:now(),T1) of
+  % case timer:now_diff(erlang:timestamp(),T1) of
   %   Delta when Delta > 1000 -> ?DBG("atom ~s took ~B us", [AtomName, Delta]);
   %   _ -> ok
   % end,
@@ -537,9 +537,9 @@ dref(<<0:32, _Count:32, Atom/binary>> = _Dref, Mp4Track) ->
 
 % Sample table box
 stbl(Atom, #mp4_track{} = Mp4Track1) ->
-  _T1 = erlang:now(),
+  _T1 = erlang:timestamp(),
   Mp4Track2 = parse_atom(Atom, Mp4Track1),
-  _T2 = erlang:now(),
+  _T2 = erlang:timestamp(),
   Mp4Track3 = unpack_samples_in_chunk(Mp4Track2),
 
   #mp4_track{
@@ -563,7 +563,7 @@ stbl(Atom, #mp4_track{} = Mp4Track1) ->
   TrackDuration = lists:max([Duration, lists:last([0|Keyframes1]) + 1000]),
   R = Mp4Track3#mp4_track{keyframes = Keyframes, bitrate = Bitrate, duration = TrackDuration},
 
-  _T4 = erlang:now(),
+  _T4 = erlang:timestamp(),
   % ?DBG("stbl: No ~B ~s, ~B kbps, load ~B us, unpack ~B us, ~B us keyframing, ~B keyframes", [TrackId, R#mp4_track.content, Bitrate, 
   %   timer:now_diff(_T2,_T1), timer:now_diff(_T4,_T2), _T3, length(Keyframes)]),
   R.

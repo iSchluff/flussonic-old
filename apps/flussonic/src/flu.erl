@@ -103,11 +103,11 @@ reload_mod(Module) when is_atom(Module) ->
 
 
 now() ->
-  {Mega,Sec,_} = erlang:now(),
+  {Mega,Sec,_} = erlang:timestamp(),
   Mega*1000000 + Sec.
 
 now_ms() ->
-  {Mega, Sec, Micro} = erlang:now(),
+  {Mega, Sec, Micro} = erlang:timestamp(),
   (Mega*1000000 + Sec)*1000 + (Micro div 1000).
 
 to_hex(L) when is_binary(L) ->

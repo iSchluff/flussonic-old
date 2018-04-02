@@ -26,9 +26,9 @@
 bench(Path) ->
   {ok, F} = file:open(Path, [read,raw,binary]),
   Decoder = ?MODULE:init(),
-  T1 = erlang:now(),
+  T1 = erlang:timestamp(),
   Count = bench_loop(F, Decoder, 0, 0),
-  T2 = erlang:now(),
+  T2 = erlang:timestamp(),
   Delta = timer:now_diff(T2,T1),
   io:format("~B frames in ~B us, ~B us/frame~n", [Count, Delta, Delta div Count]),
   ok.

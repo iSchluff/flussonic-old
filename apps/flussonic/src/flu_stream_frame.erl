@@ -52,14 +52,14 @@ handle_frame(#video_frame{} = Frame, Media) ->
 
 
 % utc() ->
-%   {Mega, Sec, Micro} = erlang:now(),
+%   {Mega, Sec, Micro} = erlang:timestamp(),
 %   (Mega*1000000+Sec)*1000 + Micro / 1000.
 
 calculate_new_stream_shift(#video_frame{dts = DTS} = Frame, 
   #stream{name = Name, ts_delta = undefined, last_dts_at = LostAt, last_dts = LDTS} = Media) ->
   GlueDelta = case LostAt of
     undefined -> 0;
-    _ -> timer:now_diff(erlang:now(), LostAt) div 1000
+    _ -> timer:now_diff(erlang:timestamp(), LostAt) div 1000
   end,
   {LastDTS, TSDelta} = case LDTS of
     undefined -> Now = DTS, {Now, Now - DTS};
@@ -102,7 +102,7 @@ save_last_dts(#video_frame{dts = DTS} = Frame, Media) ->
   {Frame, Media#stream{last_dts = DTS, last_dts_at = os:timestamp()}}.
 
 check_dts_wallclock(#video_frame{dts = DTS} = Frame, Media) ->
-  {Mega, Sec, Micro} = erlang:now(),
+  {Mega, Sec, Micro} = erlang:timestamp(),
   T = (Mega*1000*1000 + Sec)*1000 + Micro div 1000,
   Delta = round(T - DTS),
   if abs(Delta) > 1000 -> ?D({too_variable_dts, round(DTS), T, Delta});
